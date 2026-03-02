@@ -1,0 +1,8 @@
+numpy
+pyyaml
+pyadi-iio
+skyfield
+google-cloud-bigquery
+google-cloud-storage
+pandas
+pytz

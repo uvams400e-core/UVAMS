@@ -1,0 +1,42 @@
+# ==========================================
+# UVAM Edge Node Configuration
+# ==========================================
+
+gcp:
+  project_id: "uvams-400e"
+  topic_id: "uvams-pluto-data"
+
+sdr:
+  ip_address: "usb:20.2.5"
+  center_freq_hz: 137100000
+  sample_rate: 2083000
+  buffer_size: 65536          # Increased for better signal resolution
+  
+  # The "Sensitivity" Knobs
+  threshold: 150000           # Lowered from 500 to catch the signal
+  snr_min: 15.0               # Lowered from 12.0 for testing
+  elevation_min: 10.0         # Allow detection even at the horizon
+  freq_tolerance_mhz: 0.1     # Accounts for Doppler shift
+  
+  # Gain Settings
+  agc_mode: "slow_attack"     # Let the Pluto find the signal floor
+  hardware_gain: 70           # Used if agc_mode is manual
+
+processing:
+  power_threshold: 50.0       # Squelch limit to trigger Pub/Sub publish
+  station_id: "van_horn_ground_01"
+  sleep_interval_sec: 2.0     # Delay after a spike to prevent spamming
+
+# Station Coordinates (Van Horn Lab)
+station:
+  lat: '31.0427 N'
+  lon: '104.8355 W'
+
+# Frequency Map for Identification
+targets:
+  "NOAA 19": 137.1
+  "METOP-C": 137.1
+  "NOAA 18": 137.9125
+  "ARKTIKA-M 1": 137.9
+  "GOES 16": 137.9
+

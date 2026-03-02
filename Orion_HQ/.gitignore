@@ -1,0 +1,29 @@
+# --- UVAMS Data Governance ---
+# Ignore all yield/telemetry (we only want the code in Git)
+telemetry_buffer/outbox/*
+transport_layer/staging/*
+
+# --- Security & Credentials ---
+# Never push keys, environment files, or local DBs
+*.key
+*.pem
+*.env
+*.db
+security_monitor/keys/
+security_monitor/logs/
+
+# --- Python & System Junk ---
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+.AppleDouble
+.lsbin
+.Spotlight-V100
+.Trashes
+
+# --- SDR & Temp Files ---
+*.log
+*.tmp
+temp/
+transport_layer/clean_room/*

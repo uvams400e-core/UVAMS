@@ -1,0 +1,42 @@
+services:
+  station_1:
+    build: .
+    container_name: vh-gs-1
+    volumes:
+      - ./data/a:/app/data
+    environment:
+      - NODE_ID=vh-gs-1
+      - PLUTO_IP=usb:20.1.5
+      - MISSION_SECRET=Marfa-Pi  # Added for our secret handshake
+      - UVAMS_DB_PATH=/app/data/a/mission_vault.db # Tells Python where to write
+      - UVAMS_DEVICE_MODE=PLUTO                    # Our new toggle!
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/keys/uvams-key.json
+      - GCS_BUCKET_NAME=uvams-pluto-telemetry-archive
+
+  station_2:
+    build: .
+    container_name: vh-gs-2
+    volumes:
+      - ./data/b:/app/data
+    environment:
+      - NODE_ID=vh-gs-2
+      - PLUTO_IP=usb:20.2.5
+      - MISSION_SECRET=Marfa-Pi
+      - UVAMS_DB_PATH=/app/data/b/mission_vault.db # Tells Python where to write
+      - UVAMS_DEVICE_MODE=PLUTO                    # Our new toggle!
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/keys/uvams-key.json
+      - GCS_BUCKET_NAME=uvams-pluto-telemetry-archive
+
+  station_3:
+    build: .
+    container_name: vh-gs-3
+    volumes:
+      - ./data/c:/app/data
+    environment:
+      - NODE_ID=vh-gs-3
+      - PLUTO_IP=usb:20.3.5      # Hypothesized third port
+      - MISSION_SECRET=Marfa-Pi
+      - UVAMS_DB_PATH=/app/data/c/mission_vault.db # Tells Python where to write
+      - UVAMS_DEVICE_MODE=PLUTO                    # Our new toggle!
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/keys/uvams-key.json
+      - GCS_BUCKET_NAME=uvams-pluto-telemetry-archive

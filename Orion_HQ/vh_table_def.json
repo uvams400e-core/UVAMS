@@ -1,0 +1,5 @@
+{
+  "sourceFormat": "NEWLINE_DELIMITED_JSON",
+  "sourceUris": ["gs://uvams-pluto-telemetry-archive/vh_sat_telemetry/*.jsonl"],
+  "autodetect": true
+}
