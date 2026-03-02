@@ -27,3 +27,5 @@ __pycache__/
 *.tmp
 temp/
 transport_layer/clean_room/*
+Orion_HQ/keys/*.json
+Orion_HQ/*.json

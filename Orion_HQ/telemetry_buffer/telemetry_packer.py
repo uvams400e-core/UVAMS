@@ -6,24 +6,20 @@ import datetime
 # Mission Root Path
 DATA_DIR = "Orion_HQ/telemetry_buffer/outbox"
 
-def pack_to_jsonl(payload, mission_id="ORION_ALPHA"):
-    """
-    Converts raw data into a single JSONL line with a timestamp.
-    """
-    timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
-    record = {
-        "mission": mission_id,
-        "timestamp": timestamp,
-        "data": payload
-    }
-    
-    file_path = os.path.join(DATA_DIR, f"{mission_id}_telemetry.jsonl")
-    
-    # Append to the file (The 'Honey' accumulating in the Nest)
-    with open(file_path, "a") as f:
-        f.write(json.dumps(record) + "\n")
-    
-    print(f"Packed new telemetry to {file_path}")
+import json
+import os
 
-# Example Usage:
-# pack_to_jsonl({"node_id": "Marfa-Pi-01", "status": "active", "temp": 32})
+def pack_to_jsonl(data_dict):
+    """
+    Appends a dictionary as a single line of JSON to the outbox.
+    Works perfectly for AI-tagged 'smart_packets'.
+    """
+    # Use the variables we calibrated earlier
+    mission_id = "ORION_ALPHA"
+    DATA_DIR = "Orion_HQ/telemetry_buffer/outbox"
+    file_path = os.path.join(DATA_DIR, f"{mission_id}_telemetry.jsonl")
+
+    # The 'a' mode ensures we append without overwriting the old 'honey'
+    with open(file_path, "a") as f:
+        # Convert dictionary to string and add a newline
+        f.write(json.dumps(data_dict) + "\n")

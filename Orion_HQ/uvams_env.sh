@@ -1,49 +1,38 @@
-cat << 'EOF' > uvams_env.sh
 # ==========================================================
-# 🛰️ UVAMS MISSION CONTROL BLUEPRINT (VH_MISSION)
+# 🛰️ UVAMS MISSION CONTROL BLUEPRINT (ORION_HQ)
 # ==========================================================
-# Author: Vee K. | Mission: VH_ALPHA
+# Author: Vee K. | Mission: ORION_ALPHA
 # Logic: Zero-Trust / Encrypted-at-Rest / Sovereign Transport
 # ==========================================================
 
-# --- 1. CORE PATHS ---
-# Automatically find the project root regardless of laptop user
-export VH_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export VH_LAKE="gs://uvams-pluto-data-lake/vh_alpha"
+# --- 1. CORE PATHS & PYTHON CONFIG ---
+export UVAMS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export PYTHONPATH="${PYTHONPATH}:${UVAMS_ROOT}:${UVAMS_ROOT}/Orion_HQ"
 
-# --- 2. THE node (Data Generation) ---
-# Purpose: Starts the Harvester to collect, stamp, and encrypt 915MHz signals.
-alias vh-node='python3 "$VH_ROOT/edge_nodes/pluto_harvester.py"'
+# --- 2. GLOBAL MISSION SECRETS (THE SHIELD) ---
+export ORION_SECRET_KEY="8u1_Byu_m-d_Q6L8-FzX8G6R6kGf9T5_XyJ6bK6u3E8="
+export PLUTO_URI="usb:20.1.5"
+export GCP_PROJECT_ID="uvams-pluto-node-2026"
 
-# --- 3. THE HARVESTER (Local Logistics) ---
-# Purpose: Moves encrypted files from the "Outbox" (Edge) to "Staging" (Transport).
-alias vh-harvest='rsync -av --remove-source-files "$VH_ROOT/telemetry_buffer/outbox/" "$VH_ROOT/transport_layer/staging/"'
+# --- 3. HARDWARE ALIASES (THE HUNTER) ---
+# Purpose: Direct capture from the PlutoSDR
+alias vh-test-pluto='python3 "$UVAMS_ROOT/Orion_HQ/Pi_Node/pluto_test.py"'
 
-# --- 4. THE REAPER (Verification) ---
-# Purpose: Decrypts Staging data and updates the "Clean Room" for local analysis.
-alias vh-reap='python3 "$VH_ROOT/security_monitor/reaper.py"'
+# --- 4. LOGISTICS ALIASES (THE GATEKEEPER) ---
+# Purpose: Process the mule payload through the local HQ logic
+alias vh-gatekeeper='python3 "$UVAMS_ROOT/Orion_HQ/Mac_HQ/gatekeeper.py"'
 
-# --- 5. THE MULE (Cloud Archive) ---
-# Purpose: Pushes encrypted data to the GCP Lake and clears local staging.
-alias vh-mule-push='gsutil cp "$VH_ROOT/transport_layer/staging/"*.jsonl "$VH_LAKE/" && rm "$VH_ROOT/transport_layer/staging/"*.jsonl'
-
-# --- 6. THE MASTER SYNC (End-of-Day) ---
-# Purpose: Executes the full chain: Harvest -> Verify -> Archive in one click.
-alias vh-sync='vh-harvest && vh-reap && vh-mule-push'
-
-# --- 7. MISSION STATUS (Audit) ---
-# Purpose: Quick count of data sitting in each layer of the pipeline.
+# --- 5. DATA MANAGEMENT (THE MULE) ---
+# Purpose: Quick count of data sitting in the pipeline layers
 alias vh-status='echo "--- UVAMS MISSION STATUS ---"; \
-echo "🛰️ Outbox (Edge):  $(ls $VH_ROOT/telemetry_buffer/outbox/ 2>/dev/null | wc -l) files"; \
-echo "🚜 Staging (Mule):  $(ls $VH_ROOT/transport_layer/staging/ 2>/dev/null | wc -l) files"; \
-echo "💎 Clean Room:     $(ls $VH_ROOT/transport_layer/clean_room/ 2>/dev/null | wc -l) files"; \
-echo "☁️  Cloud Lake:     $(gsutil ls $VH_LAKE | wc -l) objects"'
+echo "📡 Mule Payload: $(ls $UVAMS_ROOT/Orion_HQ/telemetry_buffer/mule_payload/*.jsonl 2>/dev/null | wc -l) new files"; \
+echo "📦 Processed Data: $(ls $UVAMS_ROOT/Orion_HQ/telemetry_buffer/mule_payload/*.processed 2>/dev/null | wc -l) files"; \
+echo "🧠 AI Brain Project: $GCP_PROJECT_ID"'
 
-# --- 8. NAVIGATION ---
-alias vh-cd='cd "$VH_ROOT"'
+# --- 6. UTILITY ---
+alias vh-cd='cd "$UVAMS_ROOT"'
+alias vh-reset-honey='mv $UVAMS_ROOT/Orion_HQ/telemetry_buffer/mule_payload/*.processed $UVAMS_ROOT/Orion_HQ/telemetry_buffer/mule_payload/pluto_live.jsonl 2>/dev/null'
 
-echo "🛰️ UVAMS Environment Active: $VH_ROOT"
+echo "🛰️ UVAMS Environment Engaged: Orion v1.0 Framework Active"
+echo "📍 Root: $UVAMS_ROOT"
 # ==========================================================
-EOF
-
-source uvams_env.sh

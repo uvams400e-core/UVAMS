@@ -1,0 +1,14 @@
+# Ignore Environment Files (Security)
+*orion_env*.sh
+.env
+
+# Ignore Python caches
+__pycache__/
+*.pyc
+
+# Ignore local test data
+telemetry_buffer/
+
+# Google Cloud Keys and Secrets
+Orion_HQ/keys/
+*.json
